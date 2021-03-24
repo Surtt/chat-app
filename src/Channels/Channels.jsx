@@ -8,7 +8,7 @@ const Channels = ({ channels }) => (
       <button type="button" className="ml-auto p-0 btn btn-link">+</button>
     </div>
     <ul className="nav flex-column nav-pills nav-fill">
-      <ChannelItem channels={channels} />
+      {channels.map(({ id, name }) => <ChannelItem key={id} name={name} />)}
     </ul>
   </div>
 );

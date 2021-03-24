@@ -1,8 +1,6 @@
 // @ts-check
-import React from 'react';
-import ReactDOM from 'react-dom';
 import gon from 'gon';
-import App from './App/App';
+import initApp from './init';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -32,7 +30,7 @@ card.append(cardBody);
 const container = document.querySelector('#chat');
 container.append(card);
 
-console.log('it works!');
-console.log('gon', gon);
+// console.log('it works!');
+// console.log('gon', gon);
 
-ReactDOM.render(<App channels={gon.channels} />, document.getElementById('chat'));
+initApp(gon);

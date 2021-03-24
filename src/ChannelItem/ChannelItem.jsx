@@ -1,13 +1,15 @@
 import React from 'react';
+import cn from 'classnames';
 
-const ChannelItem = ({ channels }) => {
-  console.log(channels);
+const ChannelItem = ({ name }) => {
+  const classes = cn('nav-link', 'btn-block', 'mb-2', 'text-left', 'btn', {
+    'btn-primary': name === 'general',
+    'btn-light': name !== 'general',
+  });
   return (
-    channels.map((channel) => (
-      <li key={channel.id} className="nav-item">
-        <button type="button" className="nav-link btn-block mb-2 text-left btn btn-primary">{channel.name}</button>
-      </li>
-    ))
+    <li className="nav-item">
+      <button type="button" className={classes}>{name}</button>
+    </li>
   );
 };
 
