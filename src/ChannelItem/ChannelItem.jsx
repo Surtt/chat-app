@@ -1,14 +1,24 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 
-const ChannelItem = ({ name }) => {
+import { switchChannel } from '../slice';
+
+const changeChannel = (id, dispatch) => () => {
+  // console.log(id);
+  dispatch(switchChannel(id));
+};
+
+const ChannelItem = ({ id, name }) => {
+  const currentChannelId = useSelector((state) => state.currentChannelId);
+  const dispatch = useDispatch();
+  const isActive = id === currentChannelId ? 'btn-primary' : 'btn-light';
   const classes = cn('nav-link', 'btn-block', 'mb-2', 'text-left', 'btn', {
-    'btn-primary': name === 'general',
-    'btn-light': name !== 'general',
+    [isActive]: true,
   });
   return (
     <li className="nav-item">
-      <button type="button" className={classes}>{name}</button>
+      <button onClick={changeChannel(id, dispatch)} type="button" className={classes}>{name}</button>
     </li>
   );
 };

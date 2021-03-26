@@ -12,12 +12,11 @@ import NameContext from './context';
 const userName = Cookies.get('name') || faker.name.findName();
 Cookies.set('name', userName);
 
-export default (gon) => {
-  // console.log(io);
+export default () => {
   ReactDOM.render(
     <NameContext.Provider value={userName}>
       <Provider store={store}>
-        <App channels={gon.channels} />
+        <App />
       </Provider>
     </NameContext.Provider>,
     document.getElementById('chat'),

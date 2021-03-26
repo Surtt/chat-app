@@ -21,7 +21,8 @@ const RightSide = () => {
   const userName = useContext(NameContext);
   const dispatch = useDispatch();
   const messages = useSelector((state) => Object.values(state.messages.byId));
-  console.log(messages);
+  const currentChannelId = useSelector((state) => state.currentChannelId);
+
   socket.on('newMessage', ({ data: { attributes } }) => {
     dispatch(addMessage(attributes));
   });
@@ -29,12 +30,13 @@ const RightSide = () => {
     <div className="col h-100">
       <div className="d-flex flex-column h-100">
         <div id="messages-box" className="chat-messages overflow-auto mb-3" />
-        {messages.map(({ author, text, id }) => (
-          <div className="text-break" key={id}>
-            <b>{`${author}: `}</b>
-            {text}
-          </div>
-        ))}
+        {messages.filter(({ channelId }) => channelId === currentChannelId)
+          .map(({ author, text, id }) => (
+            <div className="text-break" key={id}>
+              <b>{`${author}: `}</b>
+              {text}
+            </div>
+          ))}
         <div className="mt-auto">
           <Formik
             initialValues={{ body: '' }}

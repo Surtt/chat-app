@@ -1,9 +1,11 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, current } from '@reduxjs/toolkit';
+import gon from 'gon';
 
-const initialState = (gon) => {
-  const { currentChannelId } = gon;
+const initialState = (gonData) => {
+  const { currentChannelId } = gonData;
   const channelsById = {};
-  gon.channels.forEach((channel) => {
+  gonData.channels.forEach((channel) => {
     const { id } = channel;
     channel.allMessagesIds = [];
     channelsById[id] = channel;
@@ -11,7 +13,7 @@ const initialState = (gon) => {
   const allChannelIds = Object.keys(channelsById).sort((a, b) => a - b);
 
   const messagesById = {};
-  gon.messages.forEach((message) => {
+  gonData.messages.forEach((message) => {
     const { id, channelId } = message;
     messagesById[id] = message;
     channelsById[channelId].allMessagesIds = [...channelsById[channelId].allMessagesIds, id];
@@ -37,19 +39,38 @@ export const message = createSlice({
   initialState: initialState(gon),
   reducers: {
     addMessage: (state, action) => {
-      const { byId, allIds } = state.messages;
-      const newMessage = action.payload;
+      try {
+        const newMessage = action.payload;
+        const { byId, allIds } = state.messages;
+        const { channelId } = newMessage;
+        console.log(channelId);
+        console.log(newMessage);
+        const { currentChannelId } = state;
+        const newChannelId = { channelId: currentChannelId };
+        return {
+          ...state,
+          messages: {
+            byId: { ...byId, [newMessage.id]: { ...newMessage, ...newChannelId } },
+            allIds: [newMessage.id, ...allIds],
+          },
+        };
+      } catch (e) {
+        console.log(e);
+        return e;
+      }
+    },
+    switchChannel: (state, action) => {
+      console.log(current(state));
+      console.log(action);
+      const newId = action.payload;
+      // const { currentChannelId } = state;
       return {
         ...state,
-        messages: {
-          byId: { ...byId, [newMessage.id]: newMessage },
-          allIds: [newMessage.id, ...allIds],
-        },
-
+        currentChannelId: newId,
       };
     },
   },
 });
 
-export const { addMessage } = message.actions;
+export const { addMessage, switchChannel } = message.actions;
 export default message.reducer;
