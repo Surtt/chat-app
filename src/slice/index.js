@@ -16,7 +16,7 @@ const initialState = (gonData) => {
   gonData.messages.forEach((message) => {
     const { id, channelId } = message;
     messagesById[id] = message;
-    channelsById[channelId].allMessagesIds = [...channelsById[channelId].allMessagesIds, id];
+    // channelsById[channelId].allMessagesIds = [...channelsById[channelId].allMessagesIds, id];
   });
 
   const allMessagesIds = Object.keys(messagesById).sort((a, b) => a - b);
@@ -34,43 +34,33 @@ const initialState = (gonData) => {
   };
 };
 
-export const message = createSlice({
-  name: 'message',
+export const chat = createSlice({
+  name: 'chat',
   initialState: initialState(gon),
   reducers: {
     addMessage: (state, action) => {
       try {
+        console.log(current(state));
         const newMessage = action.payload;
-        const { byId, allIds } = state.messages;
-        const { channelId } = newMessage;
-        console.log(channelId);
-        console.log(newMessage);
-        const { currentChannelId } = state;
-        const newChannelId = { channelId: currentChannelId };
-        return {
-          ...state,
-          messages: {
-            byId: { ...byId, [newMessage.id]: { ...newMessage, ...newChannelId } },
-            allIds: [newMessage.id, ...allIds],
-          },
-        };
+        state.messages.byId[newMessage.id] = newMessage;
+        state.messages.allIds = [...state.messages.allIds, newMessage.id];
       } catch (e) {
         console.log(e);
-        return e;
       }
     },
     switchChannel: (state, action) => {
+      const newId = action.payload;
+      state.currentChannelId = newId;
+    },
+    addChannel: (state, action) => {
       console.log(current(state));
       console.log(action);
-      const newId = action.payload;
-      // const { currentChannelId } = state;
-      return {
-        ...state,
-        currentChannelId: newId,
-      };
+      const newChannel = action.payload;
+      state.channels.byId[newChannel.id] = newChannel;
+      state.channels.allIds = [...state.channels.allIds, newChannel.id];
     },
   },
 });
 
-export const { addMessage, switchChannel } = message.actions;
-export default message.reducer;
+export const { addMessage, switchChannel, addChannel } = chat.actions;
+export default chat.reducer;

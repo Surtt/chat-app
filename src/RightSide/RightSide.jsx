@@ -49,7 +49,9 @@ const RightSide = () => {
                   },
                 },
               };
-              const response = await axios.post(routes.channelMessagesPath(1), request);
+              console.log(request);
+              const response = await axios
+                .post(routes.channelMessagesPath(currentChannelId), request);
               const { data: { attributes } } = response.data;
               dispatch(addMessage(attributes));
               setSubmitting(false);
