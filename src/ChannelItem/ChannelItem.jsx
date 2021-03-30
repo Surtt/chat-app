@@ -10,7 +10,7 @@ const changeChannel = (id, dispatch) => () => {
 };
 
 const ChannelItem = ({ id, name }) => {
-  const currentChannelId = useSelector((state) => state.currentChannelId);
+  const currentChannelId = useSelector((state) => state.channelsInfo.currentChannelId);
   const dispatch = useDispatch();
   const isActive = id === currentChannelId ? 'btn-primary' : 'btn-light';
   const classes = cn('nav-link', 'btn-block', 'mb-2', 'text-left', 'btn', {

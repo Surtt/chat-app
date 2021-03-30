@@ -11,15 +11,23 @@ import axios from 'axios';
 import routes from '../routes';
 
 import ChannelItem from '../ChannelItem';
-import { addChannel } from '../slice';
+import { addChannel, openModal, closeModal } from '../slice';
 
 const Channels = () => {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const channels = useSelector((state) => Object.values(state.channels.byId));
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
+  const modalInfo = useSelector((state) => state.modal);
+
+  const handleClose = () => {
+    dispatch(closeModal(modalInfo));
+    return setShow(false);
+  };
+
+  const handleShow = () => {
+    dispatch(openModal(modalInfo));
+    return setShow(true);
+  };
+  const channels = useSelector((state) => Object.values(state.channelsInfo.channels));
 
   return (
     <>
@@ -33,7 +41,7 @@ const Channels = () => {
           };
           console.log(request);
           const response = await axios
-            .post(routes.channelMessagesPath(), request);
+            .post(routes.channelsPath(), request);
           const { data: { attributes } } = response.data;
           dispatch(addChannel(attributes));
           setSubmitting(false);
@@ -65,7 +73,7 @@ const Channels = () => {
                   <Button className="mr-2" variant="secondary" onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting} variant="primary" as="input" value="Submit" />
+                  <Button onClick={handleClose} type="submit" disabled={isSubmitting} variant="primary" as="input" value="Submit" />
                 </div>
               </Form>
             </Modal.Body>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -20,21 +20,25 @@ const socket = io(domain);
 const RightSide = () => {
   const userName = useContext(NameContext);
   const dispatch = useDispatch();
-  const messages = useSelector((state) => Object.values(state.messages.byId));
-  const currentChannelId = useSelector((state) => state.currentChannelId);
+  const messages = useSelector((state) => Object.values(state.messagesInfo.messages));
+  const currentChannelId = useSelector((state) => state.channelsInfo.currentChannelId);
 
-  socket.on('newMessage', ({ data: { attributes } }) => {
-    dispatch(addMessage(attributes));
+  useEffect(() => {
+    socket.on('newMessage', ({ data: { attributes } }) => {
+      dispatch(addMessage(attributes));
+      console.log(attributes);
+    });
   });
+
   return (
     <div className="col h-100">
       <div className="d-flex flex-column h-100">
         <div id="messages-box" className="chat-messages overflow-auto mb-3" />
         {messages.filter(({ channelId }) => channelId === currentChannelId)
-          .map(({ author, text, id }) => (
+          .map(({ nickname, body, id }) => (
             <div className="text-break" key={id}>
-              <b>{`${author}: `}</b>
-              {text}
+              <b>{`${nickname}: `}</b>
+              {body}
             </div>
           ))}
         <div className="mt-auto">
@@ -44,8 +48,8 @@ const RightSide = () => {
               const request = {
                 data: {
                   attributes: {
-                    author: userName,
-                    text: values.body,
+                    nickname: userName,
+                    body: values.body,
                   },
                 },
               };
