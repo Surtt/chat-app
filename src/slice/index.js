@@ -66,8 +66,12 @@ const channelsInfo = createSlice({
       state.currentChannelId = id;
       state.channels.push(newChannel);
       // console.log(id);
-      console.log(current(state));
+      // console.log(current(state));
       // console.log(action);
+    },
+    removeChannel: (state, action) => {
+      console.log(current(state));
+      console.log(action);
     },
   },
 });
@@ -79,9 +83,15 @@ const modal = createSlice({
     type: null,
   },
   reducers: {
-    openModal: (state) => {
-      state.isOpened = true;
-      state.type = 'addChannel';
+    openModal: (state, action) => {
+      // state.isOpened = action.payload.isOpened;
+      // state.type = action.payload.type;
+      // state.extra = action.payload.extra || null;
+      const { payload } = action;
+      // const newState = { ...state, ...payload };
+      console.log(current(state));
+      console.log(action.payload);
+      return { ...state, ...payload };
     },
     closeModal: (state) => {
       state.isOpened = false;
@@ -91,7 +101,7 @@ const modal = createSlice({
 });
 
 export const { addMessage } = messagesInfo.actions;
-export const { switchChannel, addChannel } = channelsInfo.actions;
+export const { switchChannel, addChannel, removeChannel } = channelsInfo.actions;
 export const { openModal, closeModal } = modal.actions;
 const reducers = combineReducers({
   messagesInfo: messagesInfo.reducer,

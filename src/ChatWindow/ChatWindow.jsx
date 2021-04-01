@@ -1,34 +1,19 @@
-import React, { useContext, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   Formik, Form, Field, ErrorMessage,
 } from 'formik';
 
 import axios from 'axios';
-import { io } from 'socket.io-client';
 import routes from '../routes';
 
 import NameContext from '../context/index';
 
-import { addMessage } from '../slice';
-
-const isProduction = process.env.NODE_ENV === 'production';
-const domain = isProduction ? '' : 'http://localhost:5000';
-const socket = io(domain);
-
-const RightSide = () => {
+const chatWindow = () => {
   const userName = useContext(NameContext);
-  const dispatch = useDispatch();
   const messages = useSelector((state) => Object.values(state.messagesInfo.messages));
   const currentChannelId = useSelector((state) => state.channelsInfo.currentChannelId);
-
-  useEffect(() => {
-    socket.on('newMessage', ({ data: { attributes } }) => {
-      dispatch(addMessage(attributes));
-      console.log(attributes);
-    });
-  });
 
   return (
     <div className="col h-100">
@@ -54,10 +39,8 @@ const RightSide = () => {
                 },
               };
               console.log(request);
-              const response = await axios
+              await axios
                 .post(routes.channelMessagesPath(currentChannelId), request);
-              const { data: { attributes } } = response.data;
-              dispatch(addMessage(attributes));
               setSubmitting(false);
               resetForm();
             }}
@@ -81,4 +64,4 @@ const RightSide = () => {
   );
 };
 
-export default RightSide;
+export default chatWindow;

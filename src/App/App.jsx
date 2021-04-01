@@ -1,11 +1,11 @@
 import React from 'react';
 import Channels from '../Channels';
-import RightSide from '../RightSide';
+import ChatWindow from '../ChatWindow';
 
 const App = () => (
   <div className="row h-100 pb-3">
     <Channels />
-    <RightSide />
+    <ChatWindow />
   </div>
 );
 
