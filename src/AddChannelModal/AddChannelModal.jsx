@@ -11,7 +11,7 @@ import axios from 'axios';
 import routes from '../routes';
 import { addChannel, closeModal } from '../slice';
 
-const AddModal = ({ show, closeModalWindow }) => {
+const AddChannelModal = ({ show, closeModalWindow }) => {
   const dispatch = useDispatch();
   // const [value, setValue] = useState('');
 
@@ -84,4 +84,4 @@ const AddModal = ({ show, closeModalWindow }) => {
   );
 };
 
-export default AddModal;
+export default AddChannelModal;

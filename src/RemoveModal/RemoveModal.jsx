@@ -19,7 +19,13 @@ const RemoveModal = ({ id, show, closeModalWindow }) => {
     closeModalWindow();
   };
 
-  const handleDeleteChannel = () => {
+  const handleDeleteChannel = async () => {
+    const request = {
+      data: id,
+    };
+    await axios.delete(routes.channelPath(id), request);
+    // const { data: { attributes } } = response.data;
+    // console.log(response);
     handleClose();
     dispatch(removeChannel(id));
   };

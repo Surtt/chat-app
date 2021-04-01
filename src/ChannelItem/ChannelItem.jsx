@@ -18,8 +18,6 @@ const ChannelItem = ({ id, name, removable }) => {
   const [show, setShow] = useState(false);
 
   const handleShow = () => {
-    // const channeId = dispatch(removeChannel(id));
-    console.log(id);
     dispatch(openModal({ isOpened: true, type: 'removeChannel', extra: { channelId: id } }));
     return setShow(true);
   };

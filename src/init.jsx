@@ -20,7 +20,6 @@ export default () => {
   const socket = io();
   socket.on('newMessage', ({ data: { attributes } }) => {
     store.dispatch(addMessage(attributes));
-    console.log(attributes);
   });
   ReactDOM.render(
     <NameContext.Provider value={userName}>

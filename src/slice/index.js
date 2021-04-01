@@ -34,24 +34,6 @@ import gon from 'gon';
 //   };
 // };
 
-export const messagesInfo = createSlice({
-  name: 'messagesInfo',
-  initialState: { messages: gon.messages },
-  reducers: {
-    addMessage: (state, action) => {
-      try {
-        // console.log(current(state));
-        // console.log(action);
-        const newMessage = action.payload;
-        // console.log(newMessage);
-        state.messages.push(newMessage);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  },
-});
-
 const channelsInfo = createSlice({
   name: 'channelsInfo',
   initialState: { channels: gon.channels, currentChannelId: gon.currentChannelId },
@@ -70,8 +52,34 @@ const channelsInfo = createSlice({
       // console.log(action);
     },
     removeChannel: (state, action) => {
+      const id = action.payload;
+      if (state.currentChannelId === id) {
+        state.currentChannelId = state.channels[0].id;
+      }
+      state.channels = state.channels.filter((c) => c.id !== id);
+      // console.log(current(state));
+      // console.log(action);
+    },
+  },
+});
+
+export const messagesInfo = createSlice({
+  name: 'messagesInfo',
+  initialState: { messages: gon.messages },
+  reducers: {
+    addMessage: (state, action) => {
       console.log(current(state));
-      console.log(action);
+      // console.log(action);
+      const newMessage = action.payload;
+      // console.log(newMessage);
+      state.messages.push(newMessage);
+    },
+    extraReducers: {
+      [channelsInfo.removeChannel]:
+        (state, action) => {
+          console.log(current(state));
+          console.log(action.payload);
+        },
     },
   },
 });
@@ -89,8 +97,8 @@ const modal = createSlice({
       // state.extra = action.payload.extra || null;
       const { payload } = action;
       // const newState = { ...state, ...payload };
-      console.log(current(state));
-      console.log(action.payload);
+      // console.log(current(state));
+      // console.log(action.payload);
       return { ...state, ...payload };
     },
     closeModal: (state) => {
