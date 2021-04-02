@@ -56,8 +56,16 @@ const ChannelItem = ({ id, name, removable }) => {
           <Dropdown.Item eventKey="2" onClick={() => handleShowRename('renameChannel')}>Rename</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <RemoveModal id={id} show={showRemoveModal} closeModalWindow={() => setShowRemoveModal(false)} />
-      <RenameChannelModal id={id} show={showRenameModal} closeModalWindow={() => setShowRenameModal(false)} />
+      <RemoveModal
+        id={id}
+        show={showRemoveModal}
+        closeModalWindow={() => setShowRemoveModal(false)}
+      />
+      <RenameChannelModal
+        id={id}
+        show={showRenameModal}
+        closeModalWindow={() => setShowRenameModal(false)}
+      />
     </li>
 
   );

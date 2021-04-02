@@ -9,27 +9,15 @@ import { Formik } from 'formik';
 
 import axios from 'axios';
 import routes from '../routes';
-import { addChannel, closeModal } from '../slice';
+import { closeModal } from '../slice';
 
 const AddChannelModal = ({ show, closeModalWindow }) => {
   const dispatch = useDispatch();
-  // const [value, setValue] = useState('');
-
-  // const handleShow = () => {
-  //   dispatch(openModal({ isOpened: true, type: 'addChannel' }));
-  // };
 
   const handleClose = () => {
     dispatch(closeModal({ isOpened: false, type: null }));
-    // setValue('');
     closeModalWindow();
   };
-
-  // const handleShow = () => {
-  //   console.log('dd');
-  //   dispatch(openModal({ isOpened: true, type: 'addChannel' }));
-  //   return setShow(true);
-  // };
 
   return (
     <Formik
@@ -41,10 +29,10 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
           },
         };
         console.log(request);
-        const response = await axios
+        await axios
           .post(routes.channelsPath(), request);
-        const { data: { attributes } } = response.data;
-        dispatch(addChannel(attributes));
+        // const { data: { attributes } } = response.data;
+        // dispatch(addChannel(attributes));
         setSubmitting(false);
         resetForm();
       }}

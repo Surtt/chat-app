@@ -3,11 +3,9 @@ import { useDispatch } from 'react-redux';
 
 import { Modal, Button } from 'react-bootstrap';
 
-import { Formik } from 'formik';
-
 import axios from 'axios';
 import routes from '../routes';
-import { addChannel, closeModal, removeChannel } from '../slice';
+import { closeModal } from '../slice';
 
 const RemoveModal = ({ id, show, closeModalWindow }) => {
   const dispatch = useDispatch();
@@ -17,13 +15,14 @@ const RemoveModal = ({ id, show, closeModalWindow }) => {
     closeModalWindow();
   };
 
-  const handleDeleteChannel = async () => {
+  const handleDeleteChannel = () => {
     const request = {
-      data: id,
+      data: { id },
     };
-    await axios.delete(routes.channelPath(id), request);
+    console.log(request);
+    axios.delete(routes.channelPath(id), request);
     handleClose();
-    dispatch(removeChannel(id));
+    // dispatch(removeChannel(id));
   };
 
   return (

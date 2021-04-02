@@ -9,7 +9,7 @@ import { Formik } from 'formik';
 
 import axios from 'axios';
 import routes from '../routes';
-import { closeModal, renameChannel } from '../slice';
+import { closeModal } from '../slice';
 
 const RenameChannelModal = ({ id, show, closeModalWindow }) => {
   const dispatch = useDispatch();
@@ -30,10 +30,9 @@ const RenameChannelModal = ({ id, show, closeModalWindow }) => {
           },
         };
         console.log(request);
-        const response = await axios
+        await axios
           .patch(routes.channelPath(id), request);
-        const { data: { attributes } } = response.data;
-        dispatch(renameChannel(attributes));
+        // dispatch(renameChannel(attributes));
         setSubmitting(false);
         resetForm();
       }}
