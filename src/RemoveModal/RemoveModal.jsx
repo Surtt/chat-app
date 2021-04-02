@@ -11,11 +11,9 @@ import { addChannel, closeModal, removeChannel } from '../slice';
 
 const RemoveModal = ({ id, show, closeModalWindow }) => {
   const dispatch = useDispatch();
-  // const [value, setValue] = useState('');
 
   const handleClose = () => {
-    dispatch(closeModal());
-    // setValue('');
+    dispatch(closeModal({ isOpened: false, type: null, extra: null }));
     closeModalWindow();
   };
 
@@ -24,57 +22,35 @@ const RemoveModal = ({ id, show, closeModalWindow }) => {
       data: id,
     };
     await axios.delete(routes.channelPath(id), request);
-    // const { data: { attributes } } = response.data;
-    // console.log(response);
     handleClose();
     dispatch(removeChannel(id));
   };
 
   return (
-    <Formik
-      initialValues={{ name: '' }}
-      onSubmit={async ({ name }, { setSubmitting, resetForm }) => {
-        const request = {
-          data: {
-            attributes: { name },
-          },
-        };
-        console.log(request);
-        const response = await axios
-          .delete(routes.channelsPath(), request);
-        const { data: { attributes } } = response.data;
-        dispatch(addChannel(attributes));
-        setSubmitting(false);
-        resetForm();
-      }}
+    <Modal
+      show={show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
     >
-      {() => (
-        <Modal
-          show={show}
-          onHide={handleClose}
-          backdrop="static"
-          keyboard={false}
+      <Modal.Header closeButton>
+        <Modal.Title>Remove channel</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button
+          variant="danger"
+          onClick={handleDeleteChannel}
         >
-          <Modal.Header closeButton>
-            <Modal.Title>Remove channel</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Are you sure?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              onClick={handleDeleteChannel}
-            >
-              Confirm
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-    </Formik>
+          Confirm
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

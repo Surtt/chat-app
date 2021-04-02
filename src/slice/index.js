@@ -60,6 +60,14 @@ const channelsInfo = createSlice({
       // console.log(current(state));
       // console.log(action);
     },
+    renameChannel: (state, action) => {
+      const { name, id } = action.payload;
+      console.log(id);
+      // Доработать изменение имени
+      state.channels.find((c) => c.id === id).name = name;
+      console.log(current(state));
+      console.log(action);
+    },
   },
 });
 
@@ -74,13 +82,14 @@ export const messagesInfo = createSlice({
       // console.log(newMessage);
       state.messages.push(newMessage);
     },
-    extraReducers: {
-      [channelsInfo.removeChannel]:
-        (state, action) => {
-          console.log(current(state));
-          console.log(action.payload);
-        },
-    },
+  },
+  extraReducers: {
+    [channelsInfo.actions.removeChannel]:
+      (state, action) => {
+        state.messages = state.messages.filter((m) => m.channelId !== action.payload);
+        // console.log(current(state));
+        // console.log(action.payload);
+      },
   },
 });
 
@@ -101,15 +110,15 @@ const modal = createSlice({
       // console.log(action.payload);
       return { ...state, ...payload };
     },
-    closeModal: (state) => {
-      state.isOpened = false;
-      state.type = null;
+    closeModal: (state, action) => {
+      const { payload } = action;
+      return { ...state, ...payload };
     },
   },
 });
 
 export const { addMessage } = messagesInfo.actions;
-export const { switchChannel, addChannel, removeChannel } = channelsInfo.actions;
+export const { switchChannel, addChannel, removeChannel, renameChannel } = channelsInfo.actions;
 export const { openModal, closeModal } = modal.actions;
 const reducers = combineReducers({
   messagesInfo: messagesInfo.reducer,

@@ -6,6 +6,7 @@ import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { switchChannel, openModal } from '../slice';
 
 import RemoveModal from '../RemoveModal';
+import RenameChannelModal from '../RenameChannelModal';
 
 const changeChannel = (id, dispatch) => () => {
   dispatch(switchChannel(id));
@@ -13,13 +14,21 @@ const changeChannel = (id, dispatch) => () => {
 
 const ChannelItem = ({ id, name, removable }) => {
   const currentChannelId = useSelector((state) => state.channelsInfo.currentChannelId);
-  // const channelId = useSelector((state) => console.log(state));
-  const dispatch = useDispatch();
-  const [show, setShow] = useState(false);
 
-  const handleShow = () => {
-    dispatch(openModal({ isOpened: true, type: 'removeChannel', extra: { channelId: id } }));
-    return setShow(true);
+  const dispatch = useDispatch();
+  // const [show, setShow] = useState(false);
+
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [showRenameModal, setShowRenameModal] = useState(false);
+
+  const handleShowRemove = (type) => {
+    dispatch(openModal({ isOpened: true, type, extra: { channelId: id } }));
+    return setShowRemoveModal(true);
+  };
+
+  const handleShowRename = (type) => {
+    dispatch(openModal({ isOpened: true, type, extra: { channelId: id } }));
+    return setShowRenameModal(true);
   };
 
   const isActive = id === currentChannelId ? 'btn-primary' : 'btn-light';
@@ -43,11 +52,12 @@ const ChannelItem = ({ id, name, removable }) => {
         <Button onClick={changeChannel(id, dispatch)} className={classesDropdown}>{name}</Button>
         <Dropdown.Toggle split variant="light" className="flex-grow-0" />
         <Dropdown.Menu>
-          <Dropdown.Item eventKey="1" onClick={() => handleShow(true)}>Remove</Dropdown.Item>
-          <Dropdown.Item eventKey="2">Rename</Dropdown.Item>
+          <Dropdown.Item eventKey="1" onClick={() => handleShowRemove('removeChannel')}>Remove</Dropdown.Item>
+          <Dropdown.Item eventKey="2" onClick={() => handleShowRename('renameChannel')}>Rename</Dropdown.Item>
         </Dropdown.Menu>
-        <RemoveModal id={id} show={show} closeModalWindow={() => setShow(false)} />
       </Dropdown>
+      <RemoveModal id={id} show={showRemoveModal} closeModalWindow={() => setShowRemoveModal(false)} />
+      <RenameChannelModal id={id} show={showRenameModal} closeModalWindow={() => setShowRenameModal(false)} />
     </li>
 
   );

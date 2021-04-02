@@ -9,27 +9,16 @@ import { Formik } from 'formik';
 
 import axios from 'axios';
 import routes from '../routes';
-import { addChannel, closeModal } from '../slice';
+import { closeModal, renameChannel } from '../slice';
 
-const AddChannelModal = ({ show, closeModalWindow }) => {
+const RenameChannelModal = ({ id, show, closeModalWindow }) => {
   const dispatch = useDispatch();
-  // const [value, setValue] = useState('');
-
-  // const handleShow = () => {
-  //   dispatch(openModal({ isOpened: true, type: 'addChannel' }));
-  // };
 
   const handleClose = () => {
-    dispatch(closeModal({ isOpened: false, type: null }));
+    dispatch(closeModal({ isOpened: false, type: null, extra: null }));
     // setValue('');
     closeModalWindow();
   };
-
-  // const handleShow = () => {
-  //   console.log('dd');
-  //   dispatch(openModal({ isOpened: true, type: 'addChannel' }));
-  //   return setShow(true);
-  // };
 
   return (
     <Formik
@@ -42,9 +31,9 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
         };
         console.log(request);
         const response = await axios
-          .post(routes.channelsPath(), request);
+          .patch(routes.channelPath(id), request);
         const { data: { attributes } } = response.data;
-        dispatch(addChannel(attributes));
+        dispatch(renameChannel(attributes));
         setSubmitting(false);
         resetForm();
       }}
@@ -63,7 +52,7 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Add channel</Modal.Title>
+            <Modal.Title>Rename channel</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form noValidate onSubmit={handleSubmit}>
@@ -84,4 +73,4 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
   );
 };
 
-export default AddChannelModal;
+export default RenameChannelModal;
