@@ -1,5 +1,5 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   Modal, Button, Form,
@@ -9,10 +9,15 @@ import { Formik } from 'formik';
 
 import axios from 'axios';
 import routes from '../routes';
+import { validateChannel } from '../validators';
 import { closeModal } from '../slice';
+import RollbarContext from '../context/rollbarContext';
 
 const AddChannelModal = ({ show, closeModalWindow }) => {
+  const rollbar = useContext(RollbarContext);
   const dispatch = useDispatch();
+  const channelsName = useSelector((state) => state.channelsInfo.channels)
+    .map((c) => c.name);
 
   const handleClose = () => {
     dispatch(closeModal({ isOpened: false, type: null }));
@@ -22,19 +27,21 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
   return (
     <Formik
       initialValues={{ name: '' }}
+      validationSchema={validateChannel(channelsName)}
       onSubmit={async ({ name }, { setSubmitting, resetForm }) => {
         const request = {
           data: {
             attributes: { name },
           },
         };
-        console.log(request);
-        await axios
-          .post(routes.channelsPath(), request);
-        // const { data: { attributes } } = response.data;
-        // dispatch(addChannel(attributes));
-        setSubmitting(false);
-        resetForm();
+        try {
+          await axios
+            .post(routes.channelsPath(), request);
+          setSubmitting(false);
+          resetForm();
+        } catch (e) {
+          rollbar.error(e, request);
+        }
       }}
     >
       {({
@@ -43,6 +50,7 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
         handleChange,
         handleBlur,
         isSubmitting,
+        errors,
       }) => (
         <Modal
           show={show}
@@ -56,13 +64,14 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
           <Modal.Body>
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Control autoFocus type="text" as="input" onChange={handleChange} onBlur={handleBlur} value={name} name="name" />
+                <Form.Control autoFocus type="text" as="input" onChange={handleChange} onBlur={handleBlur} value={name} name="name" isInvalid={errors.name} />
+                <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
               <div className="d-flex justify-content-end">
                 <Button className="mr-2" variant="secondary" onClick={handleClose}>
                   Cancel
                 </Button>
-                <Button onClick={handleClose} type="submit" disabled={isSubmitting} variant="primary" as="input" value="Submit" />
+                <Button type="submit" disabled={isSubmitting} variant="primary" as="input" value="Submit" />
               </div>
             </Form>
           </Modal.Body>

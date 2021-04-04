@@ -1,19 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
-  Formik, Form, Field, ErrorMessage,
+  Formik,
 } from 'formik';
+
+import { Button, Form, InputGroup } from 'react-bootstrap';
 
 import axios from 'axios';
 import routes from '../routes';
+import { validateMessage } from '../validators';
 
-import NameContext from '../context/index';
+import NameContext from '../context/nameContext';
+import RollbarContext from '../context/rollbarContext';
 
 const chatWindow = () => {
   const userName = useContext(NameContext);
+  const rollbar = useContext(RollbarContext);
   const messages = useSelector((state) => Object.values(state.messagesInfo.messages));
   const currentChannelId = useSelector((state) => state.channelsInfo.currentChannelId);
+
+  const inputEl = useRef();
+  useEffect(() => {
+    inputEl.current.focus();
+  }, [currentChannelId]);
 
   return (
     <div className="col h-100">
@@ -29,6 +39,8 @@ const chatWindow = () => {
         <div className="mt-auto">
           <Formik
             initialValues={{ body: '' }}
+            validateOnBlur={false}
+            validationSchema={validateMessage}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               const request = {
                 data: {
@@ -38,23 +50,32 @@ const chatWindow = () => {
                   },
                 },
               };
-              console.log(request);
-              await axios
-                .post(routes.channelMessagesPath(currentChannelId), request);
-              setSubmitting(false);
-              resetForm();
+              try {
+                await axios
+                  .post(routes.channelMessagesPath(currentChannelId), request);
+                setSubmitting(false);
+                resetForm();
+              } catch (e) {
+                rollbar.error(e, request);
+              }
             }}
           >
-            {({ isSubmitting }) => (
-              <Form noValidate="" className="">
-                <div className="form-group">
-                  <div className="input-group">
-                    <Field name="body" aria-label="body" className="mr-2 form-control" />
-                    <ErrorMessage name="body" component="div" />
-                    <button disabled={isSubmitting} aria-label="submit" type="submit" className="btn btn-primary">Submit</button>
-                    <div className="d-block invalid-feedback">&nbsp;</div>
-                  </div>
-                </div>
+            {({
+              errors,
+              isSubmitting,
+              handleSubmit,
+              values: { body },
+              handleChange,
+              handleBlur,
+            }) => (
+              <Form noValidate onSubmit={handleSubmit}>
+                <Form.Group>
+                  <InputGroup>
+                    <Form.Control value={body} onChange={handleChange} onBlur={handleBlur} ref={inputEl} name="body" aria-label="body" className="mr-2 form-control" isInvalid={errors.body} />
+                    <Button disabled={isSubmitting} aria-label="submit" type="submit" className="btn btn-primary">Submit</Button>
+                    <Form.Control.Feedback type="invalid">{errors.body}</Form.Control.Feedback>
+                  </InputGroup>
+                </Form.Group>
               </Form>
             )}
           </Formik>

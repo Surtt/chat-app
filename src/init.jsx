@@ -2,19 +2,32 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
+import Rollbar from 'rollbar';
+
 import faker from 'faker';
 import Cookies from 'js-cookie';
 
 import io from 'socket.io-client';
 import App from './App/App';
 import store from './store';
-import NameContext from './context';
+import NameContext from './context/nameContext';
+import RollbarContext from './context/rollbarContext';
 import {
   addMessage, addChannel, removeChannel, renameChannel,
 } from './slice';
 
 const userName = Cookies.get('name') || faker.name.findName();
 Cookies.set('name', userName);
+
+const rollbar = new Rollbar({
+  accessToken: '08361eccdcb94fdc978dfb7461e53b1d',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
+// console.log(rollbar);
+// log a generic message and send to rollbar
+// найти свой токен
+rollbar.log('Hello world!');
 
 export default () => {
   // const isProduction = process.env.NODE_ENV === 'production';
@@ -36,11 +49,13 @@ export default () => {
     store.dispatch(renameChannel(attributes));
   });
   ReactDOM.render(
-    <NameContext.Provider value={userName}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </NameContext.Provider>,
+    <RollbarContext.Provider value={rollbar}>
+      <NameContext.Provider value={userName}>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </NameContext.Provider>
+    </RollbarContext.Provider>,
     document.getElementById('chat'),
   );
 };

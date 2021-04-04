@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Modal, Button } from 'react-bootstrap';
@@ -6,9 +6,11 @@ import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import routes from '../routes';
 import { closeModal } from '../slice';
+import RollbarContext from '../context/rollbarContext';
 
 const RemoveModal = ({ id, show, closeModalWindow }) => {
   const dispatch = useDispatch();
+  const rollbar = useContext(RollbarContext);
 
   const handleClose = () => {
     dispatch(closeModal({ isOpened: false, type: null, extra: null }));
@@ -19,10 +21,12 @@ const RemoveModal = ({ id, show, closeModalWindow }) => {
     const request = {
       data: { id },
     };
-    console.log(request);
-    axios.delete(routes.channelPath(id), request);
-    handleClose();
-    // dispatch(removeChannel(id));
+    try {
+      axios.delete(routes.channelPath(id), request);
+      handleClose();
+    } catch (e) {
+      rollbar.error(e, request);
+    }
   };
 
   return (
