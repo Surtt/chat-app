@@ -14,7 +14,7 @@ import { validateMessage } from '../validators';
 import NameContext from '../context/nameContext';
 import RollbarContext from '../context/rollbarContext';
 
-const chatWindow = () => {
+const ChatWindow = () => {
   const userName = useContext(NameContext);
   const rollbar = useContext(RollbarContext);
   const messages = useSelector((state) => Object.values(state.messagesInfo.messages));
@@ -95,4 +95,4 @@ const chatWindow = () => {
   );
 };
 
-export default chatWindow;
+export default ChatWindow;
