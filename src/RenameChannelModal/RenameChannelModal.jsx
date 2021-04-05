@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -25,6 +25,13 @@ const RenameChannelModal = ({ id, show, closeModalWindow }) => {
     closeModalWindow();
   };
 
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
+  });
+
   return (
     <Formik
       initialValues={{ name: channel.name }}
@@ -38,6 +45,7 @@ const RenameChannelModal = ({ id, show, closeModalWindow }) => {
         try {
           await axios
             .patch(routes.channelPath(id), request);
+          handleClose();
           setSubmitting(false);
           resetForm();
         } catch (e) {
@@ -65,14 +73,14 @@ const RenameChannelModal = ({ id, show, closeModalWindow }) => {
           <Modal.Body>
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Control autoFocus type="text" as="input" onChange={handleChange} onBlur={handleBlur} value={name} name="name" isInvalid={errors.name} />
+                <Form.Control ref={inputRef} type="text" as="input" onChange={handleChange} onBlur={handleBlur} value={name} name="name" isInvalid={errors.name} />
                 <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
               <div className="d-flex justify-content-end">
                 <Button className="mr-2" variant="secondary" onClick={handleClose}>
                   Cancel
                 </Button>
-                <Button onClick={handleClose} type="submit" disabled={isSubmitting} variant="primary" as="input" value="Submit" />
+                <Button type="submit" disabled={isSubmitting} variant="primary" as="input" value="Submit" />
               </div>
             </Form>
           </Modal.Body>

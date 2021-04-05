@@ -1,10 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { combineReducers, createSlice, current } from '@reduxjs/toolkit';
-import gon from 'gon';
+
+const defaultCurrentChannel = 1;
 
 const channelsInfo = createSlice({
   name: 'channelsInfo',
-  initialState: { channels: gon.channels, currentChannelId: gon.currentChannelId },
+  initialState: { channels: [], currentChannelId: defaultCurrentChannel },
   reducers: {
     switchChannel: (state, action) => {
       const newId = action.payload;
@@ -32,7 +33,7 @@ const channelsInfo = createSlice({
 
 export const messagesInfo = createSlice({
   name: 'messagesInfo',
-  initialState: { messages: gon.messages },
+  initialState: { messages: [] },
   reducers: {
     addMessage: (state, action) => {
       console.log(current(state));

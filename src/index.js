@@ -1,4 +1,6 @@
 // @ts-check
+// @ts-ignore
+import gon from 'gon';
 import initApp from './init';
 
 import 'core-js/stable';
@@ -32,4 +34,4 @@ container.append(card);
 // console.log('it works!');
 // console.log('gon', gon);
 
-initApp();
+initApp(gon);

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -24,6 +24,13 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
     closeModalWindow();
   };
 
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  });
+
   return (
     <Formik
       initialValues={{ name: '' }}
@@ -37,6 +44,7 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
         try {
           await axios
             .post(routes.channelsPath(), request);
+          handleClose();
           setSubmitting(false);
           resetForm();
         } catch (e) {
@@ -64,7 +72,17 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
           <Modal.Body>
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Control autoFocus type="text" as="input" onChange={handleChange} onBlur={handleBlur} value={name} name="name" isInvalid={errors.name} />
+                <Form.Control
+                  ref={inputRef}
+                  type="text"
+                  as="input"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={name}
+                  name="name"
+                  readOnly={isSubmitting}
+                  isInvalid={!!errors.name}
+                />
                 <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
               <div className="d-flex justify-content-end">

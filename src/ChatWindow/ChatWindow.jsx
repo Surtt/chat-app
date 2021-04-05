@@ -71,7 +71,17 @@ const chatWindow = () => {
               <Form noValidate onSubmit={handleSubmit}>
                 <Form.Group>
                   <InputGroup>
-                    <Form.Control value={body} onChange={handleChange} onBlur={handleBlur} ref={inputEl} name="body" aria-label="body" className="mr-2 form-control" isInvalid={errors.body} />
+                    <Form.Control
+                      value={body}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      ref={inputEl}
+                      name="body"
+                      aria-label="body"
+                      className="mr-2 form-control"
+                      readOnly={isSubmitting}
+                      isInvalid={errors.body}
+                    />
                     <Button disabled={isSubmitting} aria-label="submit" type="submit" className="btn btn-primary">Submit</Button>
                     <Form.Control.Feedback type="invalid">{errors.body}</Form.Control.Feedback>
                   </InputGroup>
