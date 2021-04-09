@@ -2,7 +2,7 @@
 
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import Dotenv from 'dotenv-webpack';
+import { DefinePlugin } from 'webpack';
 
 const mode = process.env.NODE_ENV || 'development';
 
@@ -26,7 +26,9 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin(),
-    new Dotenv(),
+    new DefinePlugin({
+      'process.env': JSON.stringify(process.env),
+    }),
   ],
   module: {
     rules: [
