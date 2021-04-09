@@ -17,16 +17,15 @@ import reducer, {
   addMessage, addChannel, removeChannel, renameChannel,
 } from './slice';
 
-const userName = Cookies.get('name') || faker.name.findName();
-Cookies.set('name', userName);
-
-const rollbar = new Rollbar({
-  accessToken: '08361eccdcb94fdc978dfb7461e53b1d',
-  captureUncaught: true,
-  captureUnhandledRejections: true,
-});
-
 export default (gon) => {
+  const userName = Cookies.get('name') || faker.name.findName();
+  Cookies.set('name', userName);
+  console.log(process.env.ROLLBAR_TOKEN);
+  const rollbar = new Rollbar({
+    accessToken: process.env.ROLLBAR_TOKEN,
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+  });
   const preloadedState = {
     channelsInfo: {
       channels: gon.channels,
