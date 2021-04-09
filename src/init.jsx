@@ -20,7 +20,7 @@ import reducer, {
 export default (gon) => {
   const userName = Cookies.get('name') || faker.name.findName();
   Cookies.set('name', userName);
-  console.log(process.env.ROLLBAR_TOKEN);
+
   const rollbar = new Rollbar({
     accessToken: process.env.ROLLBAR_TOKEN,
     captureUncaught: true,
