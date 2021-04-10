@@ -175,3 +175,52 @@ export const RenameChannelModal = ({ id, show, closeModalWindow }) => {
     </Formik>
   );
 };
+
+export const RemoveChannelModal = ({ id, show, closeModalWindow }) => {
+  const dispatch = useDispatch();
+  const rollbar = useContext(RollbarContext);
+
+  const handleClose = () => {
+    dispatch(closeModal({ isOpened: false, type: null, extra: null }));
+    closeModalWindow();
+  };
+
+  const handleDeleteChannel = () => {
+    const request = {
+      data: { id },
+    };
+    try {
+      axios.delete(routes.channelPath(id), request);
+      handleClose();
+    } catch (e) {
+      rollbar.error(e, request);
+    }
+  };
+
+  return (
+    <Modal
+      show={show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Remove channel</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button
+          variant="danger"
+          onClick={handleDeleteChannel}
+        >
+          Confirm
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
