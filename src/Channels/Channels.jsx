@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ChannelItem from '../ChannelItem';
-import AddChannelModal from '../AddChannelModal';
+import { AddChannelModal } from '../Modals/Modals';
 import { openModal } from '../slice';
 
 const Channels = () => {

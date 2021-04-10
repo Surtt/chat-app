@@ -6,7 +6,7 @@ import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { switchChannel, openModal } from '../slice';
 
 import RemoveModal from '../RemoveModal';
-import RenameChannelModal from '../RenameChannelModal';
+import { RenameChannelModal } from '../Modals/Modals';
 
 const changeChannel = (id, dispatch) => () => {
   dispatch(switchChannel(id));
