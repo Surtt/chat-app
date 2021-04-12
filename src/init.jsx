@@ -9,7 +9,6 @@ import faker from 'faker';
 import Cookies from 'js-cookie';
 
 import io from 'socket.io-client';
-// import reducer from './slice';
 import App from './App/App';
 import NameContext from './context/nameContext';
 import RollbarContext from './context/rollbarContext';
@@ -17,7 +16,7 @@ import reducer, {
   addMessage, addChannel, removeChannel, renameChannel,
 } from './slice';
 
-export default (gon) => {
+export default (initialData) => {
   const userName = Cookies.get('name') || faker.name.findName();
   Cookies.set('name', userName);
 
@@ -28,11 +27,11 @@ export default (gon) => {
   });
   const preloadedState = {
     channelsInfo: {
-      channels: gon.channels,
-      currentChannelId: gon.currentChannelId,
+      channels: initialData.channels,
+      currentChannelId: initialData.currentChannelId,
     },
     messagesInfo: {
-      messages: gon.messages,
+      messages: initialData.messages,
     },
   };
 
