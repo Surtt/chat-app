@@ -5,8 +5,13 @@ import cn from 'classnames';
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { switchChannel, openModal } from '../slice';
 
+<<<<<<< HEAD
 // import RemoveModal from '../RemoveModal';
 import { Modals, RemoveChannelModal } from '../Modals/Modals';
+=======
+import RemoveModal from '../RemoveModal';
+import { RenameChannelModal } from '../Modals/Modals';
+>>>>>>> parent of 7f51bef (removed removing channel to modals)
 
 const changeChannel = (id, dispatch) => () => {
   dispatch(switchChannel(id));
@@ -56,7 +61,7 @@ const ChannelItem = ({ id, name, removable }) => {
           <Dropdown.Item eventKey="2" onClick={() => handleShowRename('renameChannel')}>Rename</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <RemoveChannelModal
+      <RemoveModal
         id={id}
         show={showRemoveModal}
         closeModalWindow={() => setShowRemoveModal(false)}
