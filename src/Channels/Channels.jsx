@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ChannelItem from '../ChannelItem';
-<<<<<<< HEAD
-import { Modals } from '../Modals/Modals';
-=======
 import AddChannelModal from '../AddChannelModal';
->>>>>>> parent of 82e8494 (moved adding channel and renaming channel to modal)
 import { openModal } from '../slice';
 
 const Channels = () => {
@@ -24,7 +20,7 @@ const Channels = () => {
       <div className="d-flex mb-2">
         <span>Channels</span>
         <button onClick={() => handleShow(true)} type="button" className="ml-auto p-0 btn btn-link">+</button>
-        <Modals nameModal="addModal" show={show} closeModalWindow={() => setShow(false)} />
+        <AddChannelModal show={show} closeModalWindow={() => setShow(false)} />
       </div>
       <ul className="nav flex-column nav-pills nav-fill">
         {channels

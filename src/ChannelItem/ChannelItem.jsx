@@ -5,22 +5,8 @@ import cn from 'classnames';
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { switchChannel, openModal } from '../slice';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-// import RemoveModal from '../RemoveModal';
-import { Modals, RemoveChannelModal } from '../Modals/Modals';
-=======
-import RemoveModal from '../RemoveModal';
-<<<<<<< HEAD
-import { RenameChannelModal } from '../Modals/Modals';
->>>>>>> parent of 7f51bef (removed removing channel to modals)
-=======
-import RemoveModal from '../RemoveModal';
-import { RenameChannelModal } from '../Modals/Modals';
->>>>>>> parent of 7f51bef (removed removing channel to modals)
-=======
+import RemoveChannelModal from '../RemoveChannelModal';
 import RenameChannelModal from '../RenameChannelModal';
->>>>>>> parent of 82e8494 (moved adding channel and renaming channel to modal)
 
 const changeChannel = (id, dispatch) => () => {
   dispatch(switchChannel(id));
@@ -70,13 +56,12 @@ const ChannelItem = ({ id, name, removable }) => {
           <Dropdown.Item eventKey="2" onClick={() => handleShowRename('renameChannel')}>Rename</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <RemoveModal
+      <RemoveChannelModal
         id={id}
         show={showRemoveModal}
         closeModalWindow={() => setShowRemoveModal(false)}
       />
-      <Modals
-        nameModal="renameModal"
+      <RenameChannelModal
         id={id}
         show={showRenameModal}
         closeModalWindow={() => setShowRenameModal(false)}

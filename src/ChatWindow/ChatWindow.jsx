@@ -6,13 +6,20 @@ import {
 } from 'formik';
 
 import { Button, Form, InputGroup } from 'react-bootstrap';
-
+import { animateScroll as scroll } from 'react-scroll';
 import axios from 'axios';
 import routes from '../routes';
 import { validateMessage } from '../validators';
 
 import NameContext from '../context/nameContext';
 import RollbarContext from '../context/rollbarContext';
+
+const scrollToBottom = () => {
+  scroll.scrollToBottom({
+    containerId: 'messages-box',
+    duration: 500,
+  });
+};
 
 const ChatWindow = () => {
   const userName = useContext(NameContext);
@@ -25,17 +32,20 @@ const ChatWindow = () => {
     inputEl.current.focus();
   }, [currentChannelId]);
 
+  useEffect(scrollToBottom);
+
   return (
     <div className="col h-100">
       <div className="d-flex flex-column h-100">
-        <div id="messages-box" className="chat-messages overflow-auto mb-3" />
-        {messages.filter(({ channelId }) => channelId === currentChannelId)
-          .map(({ nickname, body, id }) => (
-            <div className="text-break" key={id}>
-              <b>{`${nickname}: `}</b>
-              {body}
-            </div>
-          ))}
+        <div id="messages-box" className="chat-messages overflow-auto mb-3">
+          {messages.filter(({ channelId }) => channelId === currentChannelId)
+            .map(({ nickname, body, id }) => (
+              <div className="text-break" key={id}>
+                <b>{`${nickname}: `}</b>
+                {body}
+              </div>
+            ))}
+        </div>
         <div className="mt-auto">
           <Formik
             initialValues={{ body: '' }}

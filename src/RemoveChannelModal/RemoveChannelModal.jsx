@@ -8,7 +8,7 @@ import routes from '../routes';
 import { closeModal } from '../slice';
 import RollbarContext from '../context/rollbarContext';
 
-const RemoveModal = ({ id, show, closeModalWindow }) => {
+const RemoveChannelModal = ({ id, show, closeModalWindow }) => {
   const dispatch = useDispatch();
   const rollbar = useContext(RollbarContext);
 
@@ -57,4 +57,4 @@ const RemoveModal = ({ id, show, closeModalWindow }) => {
   );
 };
 
-export default RemoveModal;
+export default RemoveChannelModal;

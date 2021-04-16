@@ -9,6 +9,7 @@ import faker from 'faker';
 import Cookies from 'js-cookie';
 
 import io from 'socket.io-client';
+// import reducer from './slice';
 import App from './App/App';
 import NameContext from './context/nameContext';
 import RollbarContext from './context/rollbarContext';
@@ -16,10 +17,10 @@ import reducer, {
   addMessage, addChannel, removeChannel, renameChannel,
 } from './slice';
 
-export default (initialData) => {
+export default (initData) => {
   const userName = Cookies.get('name') || faker.name.findName();
   Cookies.set('name', userName);
-  console.log(process.env.ROLLBAR_TOKEN);
+
   const rollbar = new Rollbar({
     accessToken: process.env.ROLLBAR_TOKEN,
     captureUncaught: true,
@@ -27,11 +28,11 @@ export default (initialData) => {
   });
   const preloadedState = {
     channelsInfo: {
-      channels: initialData.channels,
-      currentChannelId: initialData.currentChannelId,
+      channels: initData.channels,
+      currentChannelId: initData.currentChannelId,
     },
     messagesInfo: {
-      messages: initialData.messages,
+      messages: initData.messages,
     },
   };
 
