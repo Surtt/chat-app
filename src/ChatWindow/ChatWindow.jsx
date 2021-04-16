@@ -1,13 +1,16 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Formik } from 'formik';
+
+import {
+  Formik,
+} from 'formik';
+
 import { Button, Form, InputGroup } from 'react-bootstrap';
+
 import axios from 'axios';
-import { Scrollbars } from 'rc-scrollbars';
-
 import routes from '../routes';
-
 import { validateMessage } from '../validators';
+
 import NameContext from '../context/nameContext';
 import RollbarContext from '../context/rollbarContext';
 
@@ -26,15 +29,13 @@ const ChatWindow = () => {
     <div className="col h-100">
       <div className="d-flex flex-column h-100">
         <div id="messages-box" className="chat-messages overflow-auto mb-3" />
-        <Scrollbars>
-          {messages.filter(({ channelId }) => channelId === currentChannelId)
-            .map(({ nickname, body, id }) => (
-              <div className="text-break" key={id}>
-                <b>{`${nickname}: `}</b>
-                {body}
-              </div>
-            ))}
-        </Scrollbars>
+        {messages.filter(({ channelId }) => channelId === currentChannelId)
+          .map(({ nickname, body, id }) => (
+            <div className="text-break" key={id}>
+              <b>{`${nickname}: `}</b>
+              {body}
+            </div>
+          ))}
         <div className="mt-auto">
           <Formik
             initialValues={{ body: '' }}

@@ -11,12 +11,16 @@ import { switchChannel, openModal } from '../slice';
 import { Modals, RemoveChannelModal } from '../Modals/Modals';
 =======
 import RemoveModal from '../RemoveModal';
+<<<<<<< HEAD
 import { RenameChannelModal } from '../Modals/Modals';
 >>>>>>> parent of 7f51bef (removed removing channel to modals)
 =======
 import RemoveModal from '../RemoveModal';
 import { RenameChannelModal } from '../Modals/Modals';
 >>>>>>> parent of 7f51bef (removed removing channel to modals)
+=======
+import RenameChannelModal from '../RenameChannelModal';
+>>>>>>> parent of 82e8494 (moved adding channel and renaming channel to modal)
 
 const changeChannel = (id, dispatch) => () => {
   dispatch(switchChannel(id));

@@ -13,9 +13,13 @@ import { validateChannel } from '../validators';
 import { closeModal } from '../slice';
 import RollbarContext from '../context/rollbarContext';
 
+<<<<<<< HEAD:src/Modals/Modals.jsx
 export const Modals = ({
   nameModal, id, show, closeModalWindow,
 }) => {
+=======
+const AddChannelModal = ({ show, closeModalWindow }) => {
+>>>>>>> parent of 82e8494 (moved adding channel and renaming channel to modal):src/AddChannelModal/AddChannelModal.jsx
   const rollbar = useContext(RollbarContext);
   const dispatch = useDispatch();
   const channelsName = useSelector((state) => state.channelsInfo.channels)
@@ -113,6 +117,7 @@ export const Modals = ({
   );
 };
 
+<<<<<<< HEAD:src/Modals/Modals.jsx
 <<<<<<< HEAD
 export const RemoveChannelModal = ({ id, show, closeModalWindow }) => {
   const dispatch = useDispatch();
@@ -238,3 +243,6 @@ export const RenameChannelModal = ({ id, show, closeModalWindow }) => {
 >>>>>>> parent of 7f51bef (removed removing channel to modals)
   );
 };
+=======
+export default AddChannelModal;
+>>>>>>> parent of 82e8494 (moved adding channel and renaming channel to modal):src/AddChannelModal/AddChannelModal.jsx

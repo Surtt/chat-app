@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ChannelItem from '../ChannelItem';
+<<<<<<< HEAD
 import { Modals } from '../Modals/Modals';
+=======
+import AddChannelModal from '../AddChannelModal';
+>>>>>>> parent of 82e8494 (moved adding channel and renaming channel to modal)
 import { openModal } from '../slice';
 
 const Channels = () => {
