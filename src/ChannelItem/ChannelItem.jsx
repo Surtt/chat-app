@@ -6,8 +6,13 @@ import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { switchChannel, openModal } from '../slice';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // import RemoveModal from '../RemoveModal';
 import { Modals, RemoveChannelModal } from '../Modals/Modals';
+=======
+import RemoveModal from '../RemoveModal';
+import { RenameChannelModal } from '../Modals/Modals';
+>>>>>>> parent of 7f51bef (removed removing channel to modals)
 =======
 import RemoveModal from '../RemoveModal';
 import { RenameChannelModal } from '../Modals/Modals';

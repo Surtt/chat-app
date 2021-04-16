@@ -232,6 +232,9 @@ export const RenameChannelModal = ({ id, show, closeModalWindow }) => {
         </Modal>
       )}
     </Formik>
+<<<<<<< HEAD
+>>>>>>> parent of 7f51bef (removed removing channel to modals)
+=======
 >>>>>>> parent of 7f51bef (removed removing channel to modals)
   );
 };
