@@ -7,15 +7,14 @@ import Rollbar from 'rollbar';
 
 import faker from 'faker';
 import Cookies from 'js-cookie';
-
 import io from 'socket.io-client';
-// import reducer from './slice';
-import App from './App/App';
+
+import App from './App';
 import NameContext from './context/nameContext';
 import RollbarContext from './context/rollbarContext';
-import reducer, {
-  addMessage, addChannel, removeChannel, renameChannel,
-} from './slice';
+import reducer from './slices';
+import { addMessage } from './slices/messages';
+import { addChannel, removeChannel, renameChannel } from './slices/channels';
 
 export default (initData) => {
   const userName = Cookies.get('name') || faker.name.findName();

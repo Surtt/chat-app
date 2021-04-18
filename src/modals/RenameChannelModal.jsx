@@ -10,31 +10,31 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import routes from '../routes';
 import { validateChannel } from '../validators';
-import { closeModal, switchChannel } from '../slice';
+import { closeModal } from '../slices/modal';
 import RollbarContext from '../context/rollbarContext';
 
-const AddChannelModal = ({ show, closeModalWindow }) => {
+const RenameChannelModal = () => {
   const rollbar = useContext(RollbarContext);
   const dispatch = useDispatch();
   const channelsName = useSelector((state) => state.channelsInfo.channels)
     .map((c) => c.name);
-  const currentChannel = useSelector((state) => state.channelsInfo.currentChannelId);
-  console.log(currentChannel);
+  const { isOpened, extra: { channelId } } = useSelector((state) => state.modal);
+  const channel = useSelector((state) => state
+    .channelsInfo.channels).find((c) => c.id === channelId);
   const handleClose = () => {
-    dispatch(closeModal({ isOpened: false, type: null }));
-    closeModalWindow();
+    dispatch(closeModal({ type: null, extra: null }));
   };
 
   const inputRef = useRef(null);
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.select();
     }
   });
 
   return (
     <Formik
-      initialValues={{ name: '' }}
+      initialValues={{ name: channel.name }}
       validationSchema={validateChannel(channelsName)}
       onSubmit={async ({ name }, { setSubmitting, resetForm }) => {
         const request = {
@@ -44,9 +44,7 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
         };
         try {
           await axios
-            .post(routes.channelsPath(), request);
-          console.log(request.data.attributes);
-          dispatch(switchChannel(request.data.attributes.id));
+            .patch(routes.channelPath(channelId), request);
           handleClose();
           setSubmitting(false);
           resetForm();
@@ -64,28 +62,18 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
         errors,
       }) => (
         <Modal
-          show={show}
+          show={isOpened}
           onHide={handleClose}
           backdrop="static"
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Add channel</Modal.Title>
+            <Modal.Title>Rename channel</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Control
-                  ref={inputRef}
-                  type="text"
-                  as="input"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={name}
-                  name="name"
-                  readOnly={isSubmitting}
-                  isInvalid={!!errors.name}
-                />
+                <Form.Control ref={inputRef} type="text" as="input" onChange={handleChange} onBlur={handleBlur} value={name} name="name" isInvalid={errors.name} />
                 <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
               <div className="d-flex justify-content-end">
@@ -102,4 +90,4 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
   );
 };
 
-export default AddChannelModal;
+export default RenameChannelModal;

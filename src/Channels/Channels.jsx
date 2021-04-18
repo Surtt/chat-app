@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ChannelItem from '../ChannelItem';
-import AddChannelModal from '../AddChannelModal';
-import { openModal } from '../slice';
+import AddChannelModal from '../modals/AddChannelModal';
+import { openModal } from '../slices/modal';
 
 const Channels = () => {
   const channels = useSelector((state) => Object.values(state.channelsInfo.channels));
@@ -11,7 +11,7 @@ const Channels = () => {
   const [show, setShow] = useState(false);
 
   const handleShow = () => {
-    dispatch(openModal({ isOpened: true, type: 'addChannel' }));
+    dispatch(openModal({ type: 'addChannel' }));
     return setShow(true);
   };
 

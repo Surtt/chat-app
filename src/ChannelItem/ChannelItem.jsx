@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
-import { switchChannel, openModal } from '../slice';
-
-import RemoveChannelModal from '../RemoveChannelModal';
-import RenameChannelModal from '../RenameChannelModal';
+import { switchChannel } from '../slices/channels';
+import { openModal } from '../slices/modal';
 
 const changeChannel = (id, dispatch) => () => {
   dispatch(switchChannel(id));
@@ -14,21 +12,10 @@ const changeChannel = (id, dispatch) => () => {
 
 const ChannelItem = ({ id, name, removable }) => {
   const currentChannelId = useSelector((state) => state.channelsInfo.currentChannelId);
-
   const dispatch = useDispatch();
-  // const [show, setShow] = useState(false);
 
-  const [showRemoveModal, setShowRemoveModal] = useState(false);
-  const [showRenameModal, setShowRenameModal] = useState(false);
-
-  const handleShowRemove = (type) => {
-    dispatch(openModal({ isOpened: true, type, extra: { channelId: id } }));
-    return setShowRemoveModal(true);
-  };
-
-  const handleShowRename = (type) => {
-    dispatch(openModal({ isOpened: true, type, extra: { channelId: id } }));
-    return setShowRenameModal(true);
+  const handleShow = (type) => {
+    dispatch(openModal({ type, extra: { channelId: id } }));
   };
 
   const isActive = id === currentChannelId ? 'btn-primary' : 'btn-light';
@@ -41,37 +28,27 @@ const ChannelItem = ({ id, name, removable }) => {
   });
 
   const defaultItem = (
-    <li className="nav-item">
-      <button onClick={changeChannel(id, dispatch)} type="button" className={classes}>{name}</button>
-    </li>
+    <button onClick={changeChannel(id, dispatch)} type="button" className={classes}>{name}</button>
   );
 
-  const dropdownIten = (
-    <li className="nav-item">
+  const dropdownItem = (
+    <>
       <Dropdown as={ButtonGroup} className="d-flex mb-2">
         <Button onClick={changeChannel(id, dispatch)} className={classesDropdown}>{name}</Button>
         <Dropdown.Toggle split variant="light" className="flex-grow-0" />
         <Dropdown.Menu>
-          <Dropdown.Item eventKey="1" onClick={() => handleShowRemove('removeChannel')}>Remove</Dropdown.Item>
-          <Dropdown.Item eventKey="2" onClick={() => handleShowRename('renameChannel')}>Rename</Dropdown.Item>
+          <Dropdown.Item eventKey="1" onClick={() => handleShow('removeChannel')}>Remove</Dropdown.Item>
+          <Dropdown.Item eventKey="2" onClick={() => handleShow('renameChannel')}>Rename</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <RemoveChannelModal
-        id={id}
-        show={showRemoveModal}
-        closeModalWindow={() => setShowRemoveModal(false)}
-      />
-      <RenameChannelModal
-        id={id}
-        show={showRenameModal}
-        closeModalWindow={() => setShowRenameModal(false)}
-      />
-    </li>
+    </>
+  );
 
+  const dropdownLi = (
+    <li className="nav-item">{removable ? dropdownItem : defaultItem}</li>
   );
-  return (
-    removable ? dropdownIten : defaultItem
-  );
+
+  return dropdownLi;
 };
 
 export default ChannelItem;
