@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
-import {
-  Formik,
-} from 'formik';
+import { useFormik } from 'formik';
 
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { animateScroll as scroll } from 'react-scroll';
@@ -34,6 +32,30 @@ const ChatWindow = () => {
 
   useEffect(scrollToBottom);
 
+  const formik = useFormik({
+    initialValues: {
+      body: '',
+    },
+    validateOnBlur: false,
+    validateMessage,
+    onSubmit: async ({ body }, { resetForm }) => {
+      const request = {
+        data: {
+          attributes: {
+            nickname: userName,
+            body,
+          },
+        },
+      };
+      try {
+        await axios.post(routes.channelMessagesPath(currentChannelId), request);
+        resetForm();
+      } catch (e) {
+        rollbar.error(e, request);
+      }
+    },
+  });
+
   return (
     <div className="col h-100">
       <div className="d-flex flex-column h-100">
@@ -47,58 +69,25 @@ const ChatWindow = () => {
             ))}
         </div>
         <div className="mt-auto">
-          <Formik
-            initialValues={{ body: '' }}
-            validateOnBlur={false}
-            validationSchema={validateMessage}
-            onSubmit={async (values, { setSubmitting, resetForm }) => {
-              const request = {
-                data: {
-                  attributes: {
-                    nickname: userName,
-                    body: values.body,
-                  },
-                },
-              };
-              try {
-                await axios
-                  .post(routes.channelMessagesPath(currentChannelId), request);
-                setSubmitting(false);
-                resetForm();
-              } catch (e) {
-                rollbar.error(e, request);
-              }
-            }}
-          >
-            {({
-              errors,
-              isSubmitting,
-              handleSubmit,
-              values: { body },
-              handleChange,
-              handleBlur,
-            }) => (
-              <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group>
-                  <InputGroup>
-                    <Form.Control
-                      value={body}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      ref={inputEl}
-                      name="body"
-                      aria-label="body"
-                      className="mr-2 form-control"
-                      readOnly={isSubmitting}
-                      isInvalid={errors.body}
-                    />
-                    <Button disabled={isSubmitting} aria-label="submit" type="submit" className="btn btn-primary">Submit</Button>
-                    <Form.Control.Feedback type="invalid">{errors.body}</Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-              </Form>
-            )}
-          </Formik>
+          <Form noValidate onSubmit={formik.handleSubmit}>
+            <Form.Group>
+              <InputGroup>
+                <Form.Control
+                  value={formik.values.body}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  ref={inputEl}
+                  name="body"
+                  aria-label="body"
+                  className="mr-2 form-control"
+                  readOnly={formik.isSubmitting}
+                  isInvalid={formik.errors.body}
+                />
+                <Button disabled={formik.isSubmitting} aria-label="submit" type="submit" className="btn btn-primary">Submit</Button>
+                <Form.Control.Feedback type="invalid">{formik.errors.body}</Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+          </Form>
         </div>
       </div>
     </div>

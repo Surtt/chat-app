@@ -5,7 +5,7 @@ import {
   Modal, Button, Form,
 } from 'react-bootstrap';
 
-import { Formik } from 'formik';
+import { useFormik } from 'formik';
 
 import axios from 'axios';
 import routes from '../routes';
@@ -25,79 +25,70 @@ const AddChannelModal = ({ show, closeModalWindow }) => {
     closeModalWindow();
   };
 
-  const inputRef = useRef(null);
+  const inputRef = useRef();
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   });
 
+  const formik = useFormik({
+    initialValues: { name: '' },
+    validationSchema: validateChannel(channelsName),
+    onSubmit: async ({ name }, { setSubmitting, resetForm }) => {
+      const request = {
+        data: {
+          attributes: { name },
+        },
+      };
+      try {
+        const newChannel = await axios
+          .post(routes.channelsPath(), request);
+        dispatch(switchChannel(newChannel.data.data.attributes.id));
+        handleClose();
+        setSubmitting(false);
+        resetForm();
+      } catch (e) {
+        rollbar.error(e, request);
+      }
+    },
+  });
+
   return (
-    <Formik
-      initialValues={{ name: '' }}
-      validationSchema={validateChannel(channelsName)}
-      onSubmit={async ({ name }, { setSubmitting, resetForm }) => {
-        const request = {
-          data: {
-            attributes: { name },
-          },
-        };
-        try {
-          const newChannel = await axios
-            .post(routes.channelsPath(), request);
-          dispatch(switchChannel(newChannel.data.data.attributes.id));
-          handleClose();
-          setSubmitting(false);
-          resetForm();
-        } catch (e) {
-          rollbar.error(e, request);
-        }
-      }}
+    <Modal
+      show={show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
     >
-      {({
-        handleSubmit,
-        values: { name },
-        handleChange,
-        handleBlur,
-        isSubmitting,
-        errors,
-      }) => (
-        <Modal
-          show={show}
-          onHide={handleClose}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Add channel</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form noValidate onSubmit={handleSubmit}>
-              <Form.Group>
-                <Form.Control
-                  ref={inputRef}
-                  type="text"
-                  as="input"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={name}
-                  name="name"
-                  readOnly={isSubmitting}
-                  isInvalid={!!errors.name}
-                />
-                <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
-              </Form.Group>
-              <div className="d-flex justify-content-end">
-                <Button className="mr-2" variant="secondary" onClick={handleClose}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmitting} variant="primary" as="input" value="Submit" />
-              </div>
-            </Form>
-          </Modal.Body>
-        </Modal>
-      )}
-    </Formik>
+      <Modal.Header closeButton>
+        <Modal.Title>Add channel</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form noValidate onSubmit={formik.handleSubmit}>
+          <Form.Group>
+            <Form.Control
+              ref={inputRef}
+              type="text"
+              as="input"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              name="name"
+              readOnly={formik.isSubmitting}
+              isInvalid={!!formik.errors.name}
+            />
+            <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>
+          </Form.Group>
+          <div className="d-flex justify-content-end">
+            <Button className="mr-2" variant="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={formik.isSubmitting} variant="primary" as="input" value="Submit" />
+          </div>
+        </Form>
+      </Modal.Body>
+    </Modal>
   );
 };
 
